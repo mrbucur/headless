@@ -4,23 +4,35 @@ import clsx from 'clsx';
 
 export default function MyModal() {
   let [isOpen, setIsOpen] = useState(true);
+
   const [values, setValues] = useState({
     firstName: '',
     lastName: '',
     dateOfBirth: '',
     weightAtBirth: '',
+    apgarScore: '',
   });
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
     dateOfBirth: '',
     weightAtBirth: '',
+    apgarScore: '',
   });
   function handleInputChange(e) {
     setErrors({ ...errors, [e.target.name]: '' });
     setValues({ ...values, [e.target.name]: e.target.value });
   }
+  async function handleSubmit(e) {
+    e.preventDefault();
 
+    const validation = validateForm(values);
+
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      return;
+    }
+  }
   function closeModal() {
     setIsOpen(false);
   }
@@ -67,88 +79,108 @@ export default function MyModal() {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    Creare profil copil
-                  </Dialog.Title>
-                  <p className="mt-1">
-                    <label htmlFor="firstName">Prenume</label>
-                    <input
-                      className={clsx('border rounded border-black ml-1', {
-                        'border-red-800': errors.firstName,
-                      })}
-                      type="text"
-                      name="firstName"
-                      id="firstName"
-                      value={values.firstName}
-                      onChange={handleInputChange}
-                    />
-                  </p>
-                  {errors.firstName && (
-                    <p className="mt-1 text-red-800">{errors.firstName}</p>
-                  )}
-                  <p className="mt-1">
-                    <label htmlFor="lastName">Nume</label>
-                    <input
-                      className={clsx('border rounded border-black ml-1', {
-                        'border-red-800': errors.lastName,
-                      })}
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      value={values.lastName}
-                      onChange={handleInputChange}
-                    />
-                  </p>
-                  {errors.lastName && (
-                    <p className="mt-1 text-red-800">{errors.lastName}</p>
-                  )}
-                  <p className="mt-1">
-                    <label htmlFor="dateOfBirth">Data nasterii</label>
-                    <input
-                      className={clsx('border rounded border-black ml-1', {
-                        'border-red-800': errors.dateOfBirth,
-                      })}
-                      type="date"
-                      name="dateOfBirth"
-                      id="dateOfBirth"
-                      value={values.dateOfBirth}
-                      onChange={handleInputChange}
-                    />
-                  </p>
-                  {errors.dateOfBirth && (
-                    <p className="mt-1 text-red-800">{errors.dateOfBirth}</p>
-                  )}
-                  <p className="mt-1">
-                    <label htmlFor="weightAtBirth">
-                      Greutatea la nastere (g)
-                    </label>
-                    <input
-                      className={clsx('border rounded border-black ml-1', {
-                        'border-red-800': errors.weightAtBirth,
-                      })}
-                      type="text"
-                      pattern="[0-9]*"
-                      name="weightAtBirth"
-                      id="weightAtBirth"
-                      value={values.weightAtBirth}
-                      onChange={handleInputChange}
-                    />
-                  </p>
-                  {errors.weightAtBirth && (
-                    <p className="mt-1 text-red-800">{errors.weightAtBirth}</p>
-                  )}
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
+                  <form onSubmit={handleSubmit}>
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-gray-900"
                     >
-                      Salveaza profil
-                    </button>
-                  </div>
+                      Creare profil copil
+                    </Dialog.Title>
+                    <p className="mt-1">
+                      <label htmlFor="firstName">Prenume</label>
+                      <input
+                        className={clsx('border rounded border-black ml-1', {
+                          'border-red-800': errors.firstName,
+                        })}
+                        type="text"
+                        name="firstName"
+                        id="firstName"
+                        value={values.firstName}
+                        onChange={handleInputChange}
+                      />
+                    </p>
+                    {errors.firstName && (
+                      <p className="mt-1 text-red-800">{errors.firstName}</p>
+                    )}
+                    <p className="mt-1">
+                      <label htmlFor="lastName">Nume</label>
+                      <input
+                        className={clsx('border rounded border-black ml-1', {
+                          'border-red-800': errors.lastName,
+                        })}
+                        type="text"
+                        name="lastName"
+                        id="lastName"
+                        value={values.lastName}
+                        onChange={handleInputChange}
+                      />
+                    </p>
+                    {errors.lastName && (
+                      <p className="mt-1 text-red-800">{errors.lastName}</p>
+                    )}
+                    <p className="mt-1">
+                      <label htmlFor="dateOfBirth">Data nasterii</label>
+                      <input
+                        className={clsx('border rounded border-black ml-1', {
+                          'border-red-800': errors.dateOfBirth,
+                        })}
+                        type="date"
+                        name="dateOfBirth"
+                        id="dateOfBirth"
+                        value={values.dateOfBirth}
+                        onChange={handleInputChange}
+                      />
+                    </p>
+                    {errors.dateOfBirth && (
+                      <p className="mt-1 text-red-800">{errors.dateOfBirth}</p>
+                    )}
+                    <p className="mt-1">
+                      <label htmlFor="weightAtBirth">
+                        Greutatea la nastere (g)
+                      </label>
+                      <input
+                        className={clsx('border rounded border-black ml-1', {
+                          'border-red-800': errors.weightAtBirth,
+                        })}
+                        type="text"
+                        pattern="[0-9]*"
+                        name="weightAtBirth"
+                        id="weightAtBirth"
+                        value={values.weightAtBirth}
+                        onChange={handleInputChange}
+                      />
+                    </p>
+                    {errors.weightAtBirth && (
+                      <p className="mt-1 text-red-800">
+                        {errors.weightAtBirth}
+                      </p>
+                    )}
+                    <p className="mt-1">
+                      <label htmlFor="dateOfBirth">Nota APGAR</label>
+                      <input
+                        className={clsx('border rounded border-black ml-1', {
+                          'border-red-800': errors.apgarScore,
+                        })}
+                        type="text"
+                        name="apgarScore"
+                        id="apgarScore"
+                        value={values.apgarScore}
+                        onChange={handleInputChange}
+                      />
+                    </p>
+                    {errors.apgarScore && (
+                      <p className="mt-1 text-red-800">{errors.apgarScore}</p>
+                    )}
+                    <div className="mt-4">
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={closeModal}
+                      >
+                        Salveaza profil
+                      </button>
+                    </div>
+                  </form>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -165,6 +197,7 @@ function validateForm(values, isRegister) {
       lastName: '',
       dateOfBirth: '',
       weightAtBirth: '',
+      apgarScore: '',
     },
     isValid: true,
   };
@@ -185,13 +218,19 @@ function validateForm(values, isRegister) {
     if (!values.dateOfBirth) {
       validation.isValid = false;
       validation.errors.dateOfBirth =
-        'Te rugam sa introduci data de nastere a copilului';
+        'Te rugam sa introduci data de nastere copilului.';
+    }
 
-      if (!values.weightAtBirth) {
-        validation.isValid = false;
-        validation.errors =
-          'Te rugam sa introduci greutatea la nastere a copilului';
-      }
+    if (!values.weightAtBirth) {
+      validation.isValid = false;
+      validation.errors.weightAtBirth =
+        'Te rugam sa introduci greutatea la nastere a copilului (g).';
+    }
+
+    if (!values.apgarScore) {
+      validation.isValid = false;
+      validation.errors.apgarScore =
+        'Te rugam sa introduci nota APGAR primita la nastere.';
     }
   }
 

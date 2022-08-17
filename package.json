@@ -15,6 +15,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:server": "json-server-auth --watch db.json -p 3005 -r routes.json",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -39,6 +40,8 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.8",
+    "json-server": "^0.17.0",
+    "json-server-auth": "^2.1.0",
     "postcss": "^8.4.16",
     "tailwindcss": "^3.1.8"
   }
